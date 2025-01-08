@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import styled from "@emotion/styled"
 
 import './App.css';
 
@@ -55,6 +56,16 @@ PokemonInfo.propTypes = {
   }),
 }
 
+const Title = styled.h1`
+  text-align: center;
+`;
+const TwoColumnLayout = styled.div`
+  display: grid;
+  grid-template=columns: 30% 70%;
+  grid-column-gap: 1rem;
+`;
+
+
 function App() {
   const [filter, filterSet] = React.useState("");
   const [pokemon, pokemonSet] = React.useState([]);
@@ -62,8 +73,8 @@ function App() {
 
   React.useEffect(() => {
     fetch("http://localhost:3000/my-app/pokemon.json")
-    .then((resp) => resp.json())
-    .then((data) => pokemonSet(data))
+      .then((resp) => resp.json())
+      .then((data) => pokemonSet(data))
   }, [])
 
   return <div
@@ -73,18 +84,13 @@ function App() {
       paddingTop: "1rem",
     }}
   >
-    <h1 className='title'>Pokemon Search</h1>
+    <Title>Pokemon Search</Title>
     <input
       value={filter}
       onChange={(evt) => filterSet(evt.target.value)}
     />
-    <div
-      style={{
-        display: 'grid',
-        gridTemplateColumns: '70% 30%',
-        gridColumnGap: "1rem"
-      }}>
-      <div>
+    <div>
+      <TwoColumnLayout>
         <table width="100%">
           <thead>
             <tr>
@@ -101,7 +107,7 @@ function App() {
               ))}
           </tbody>
         </table>
-      </div>
+      </TwoColumnLayout>
       {selectedItem && <PokemonInfo {...selectedItem} />}
     </div>
   </div>
