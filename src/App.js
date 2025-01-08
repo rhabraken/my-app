@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 
 import './App.css';
@@ -21,11 +21,12 @@ PokemonRow.propTypes = {
     }),
     type: PropTypes.arrayOf(PropTypes.string)
   }),
+  onSelect: PropTypes.func
 };
 
 function App() {
   const [filter, filterSet] = React.useState("");
-  const [selectedItem, selectedItemSet] = React.useState("");
+  const [selectedItem, selectedItemSet] = React.useState(null);
   return <div
     style={{
       margin: "auto",
@@ -64,7 +65,7 @@ function App() {
       </div>
       {selectedItem && (
         <div>
-          <h1>{selectedItem.name.English}</h1>
+          <h1>{selectedItem.name.english}</h1>
         </div>
       )}
     </div>
