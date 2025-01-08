@@ -1,15 +1,20 @@
 import React from "react";
 import styled from "@emotion/styled";
 import CssBaseline from "@mui/material/CssBaseline";
+import { legacy_createStore as createStore } from 'redux';
+import { Provider, useSelector, useDispatch } from 'react-redux'
 
 import "./App.css";
 
 import PokemonInfo from "./components/PokemonInfo";
 import PokemonFilter from "./components/PokemonFilter";
 import PokemonTable from "./components/PokemonTable";
-import PokemonContext from "./PokemonContext";
 
-const PokemonReducer = (state, action) => {
+const PokemonReducer = (state = {
+  pokemon: [],
+  filter: "",
+  selectedPokemon: null
+}, action) => {
   switch (action.type) {
     case 'SET_FILTER':
       return {
@@ -27,9 +32,11 @@ const PokemonReducer = (state, action) => {
         selectedPokemon: action.payload,
       };
     default:
-      throw new Error("No action");
+      return state;
   }
 }
+
+const store = createStore(PokemonReducer)
 
 const Title = styled.h1`
   text-align: center;
@@ -47,11 +54,8 @@ const TwoColumnLayout = styled.div`
 
 
 function App() {
-  const [state, dispatch] = React.useReducer(PokemonReducer, {
-    pokemon: [],
-    filter: "",
-    selectedPokemon: null,
-  })
+  const dispatch = useDispatch()
+  const pokemon = useSelector(state => state.pokemon)
 
   React.useEffect(() => {
     fetch("/my-app/pokemon.json")
@@ -62,18 +66,11 @@ function App() {
       }));
   }, []);
 
-  if (!state.pokemon) {
+  if (!pokemon) {
     return <div>Loading data</div>;
   }
 
   return (
-    <PokemonContext.Provider
-      value={{
-        state,
-        dispatch,
-      }}
-
-    >
       <PageContainer>
         <CssBaseline />
         <Title>Pokemon Search</Title>
@@ -85,9 +82,7 @@ function App() {
           <PokemonInfo />
         </TwoColumnLayout>
       </PageContainer>
-    </PokemonContext.Provider>
-
   );
 }
 
-export default App;
+export default () => <Provider store={store}><App/></Provider> ;
