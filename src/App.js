@@ -61,9 +61,10 @@ const Title = styled.h1`
 `;
 const TwoColumnLayout = styled.div`
   display: grid;
-  grid-template=columns: 30% 70%;
+  grid-template-columns: 30% 70%;
   grid-column-gap: 1rem;
 `;
+
 
 
 function App() {
