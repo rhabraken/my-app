@@ -41,21 +41,22 @@ const store = createStore(PokemonReducer)
 const Title = styled.h1`
   text-align: center;
 `;
+
 const PageContainer = styled.div`
   margin: auto;
   width: 800px;
   padding-top: 1em;
 `;
+
 const TwoColumnLayout = styled.div`
   display: grid;
   grid-template-columns: 80% 20%;
   grid-column-gap: 1rem;
 `;
 
-
 function App() {
-  const dispatch = useDispatch()
-  const pokemon = useSelector(state => state.pokemon)
+  const dispatch = useDispatch();
+  const pokemon = useSelector(state => state.pokemon);
 
   React.useEffect(() => {
     fetch("/my-app/pokemon.json")
@@ -64,20 +65,20 @@ function App() {
         type: 'SET_POKEMON',
         payload: data,
       }));
-  }, []);
+  }, [dispatch]);
 
   if (!pokemon) {
     return <div>Loading data</div>;
   }
 
   return (
-      <PageContainer>
-        <CssBaseline />
-        <Title>Pokemon Search</Title>
-        <TwoColumnLayout>
-          <div>
-            <PokemonFilter />
-            <PokemonTable />
+    <PageContainer>
+      <CssBaseline />
+      <Title>Pokemon Search</Title>
+      <TwoColumnLayout>
+        <div>
+          <PokemonFilter />
+          <PokemonTable />
           </div>
           <PokemonInfo />
         </TwoColumnLayout>
@@ -85,4 +86,6 @@ function App() {
   );
 }
 
-export default () => <Provider store={store}><App/></Provider> ;
+const Main = () => <Provider store={store}><App/></Provider> ;
+
+export default Main;
