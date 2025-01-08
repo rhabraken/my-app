@@ -4,20 +4,27 @@ import React, { useContext } from 'react'
 
 
 const PokemonTable = () => {
-    const{pokemon, filter, selectedPokemonSet} = useContext(PokemonContext)
+    const {
+        state: { pokemon, filter },
+        dispatch
+    } = useContext(PokemonContext)
     return <table width="100%">
         <tbody>
             {pokemon
                 .filter(({ name: { english } }) =>
                     english
-                        .toLocaleLowerCase()
+                        .toLocaleLowerCase() 
                         .includes(filter.toLocaleLowerCase())
                 )
                 .slice(0, 20)
                 .map((pokemon) => (
                     <PokemonRow
                         pokemon={pokemon}
-                        onClick={(pokemon) => selectedPokemonSet(pokemon)}
+                        onClick={(pokemon) => dispatch({
+                            type: 'SET_SELECTED_POKEMON',
+                            payload: pokemon
+                        })
+                        }
                     />
                 ))}
         </tbody>

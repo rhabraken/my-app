@@ -9,6 +9,27 @@ import PokemonFilter from "./components/PokemonFilter";
 import PokemonTable from "./components/PokemonTable";
 import PokemonContext from "./PokemonContext";
 
+const PokemonReducer = (state, action) => {
+  switch (action.type) {
+    case 'SET_FILTER':
+      return {
+        ...state,
+        filter: action.payload,
+      };
+    case 'SET_POKEMON':
+      return {
+        ...state,
+        pokemon: action.payload,
+      };
+    case 'SET_SELECTED_POKEMON':
+      return {
+        ...state,
+        selectedPokemon: action.payload,
+      };
+    default:
+      throw new Error("No action");
+  }
+}
 
 const Title = styled.h1`
   text-align: center;
@@ -26,41 +47,42 @@ const TwoColumnLayout = styled.div`
 
 
 function App() {
-  const [filter, filterSet] = React.useState("");
-  const [pokemon, pokemonSet] = React.useState(null);
-  const [selectedPokemon, selectedPokemonSet] = React.useState(null);
+  const [state, dispatch] = React.useReducer(PokemonReducer, {
+    pokemon: [],
+    filter: "",
+    selectedPokemon: null,
+  })
 
   React.useEffect(() => {
     fetch("/my-app/pokemon.json")
       .then((resp) => resp.json())
-      .then((data) => pokemonSet(data));
+      .then((data) => dispatch({
+        type: 'SET_POKEMON',
+        payload: data,
+      }));
   }, []);
 
-  if (!pokemon) {
+  if (!state.pokemon) {
     return <div>Loading data</div>;
   }
 
   return (
     <PokemonContext.Provider
-    value={{
-      filter, 
-      pokemon, 
-      selectedPokemon, 
-      filterSet, 
-      pokemonSet, 
-      selectedPokemonSet,
-    }}
-    
+      value={{
+        state,
+        dispatch,
+      }}
+
     >
       <PageContainer>
         <CssBaseline />
         <Title>Pokemon Search</Title>
         <TwoColumnLayout>
           <div>
-            <PokemonFilter/>
+            <PokemonFilter />
             <PokemonTable />
           </div>
-          {selectedPokemon && <PokemonInfo {...selectedPokemon} />}
+          <PokemonInfo />
         </TwoColumnLayout>
       </PageContainer>
     </PokemonContext.Provider>
