@@ -11,7 +11,10 @@ const PokemonRow = ({ pokemon, onSelect }) => (
     <td>{pokemon.name.english}</td>
     <td>{pokemon.type.join(', ')}</td>
     <td>
-      <Button onClick={() => onSelect(pokemon)}>Select!</Button>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={() => onSelect(pokemon)}>Select!</Button>
     </td>
   </tr>
 );
